@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-image: url(./images2/back3.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            left: -200px;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .sidebar li:hover {
+            background-color: blue;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        .content.sidebar-open {
+            margin-left: 200px;
+        }
+
+        .hamburger {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .hamburger div {
+            width: 30px;
+            height: 3px;
+            background-color: blue;
+            margin: 5px 0;
+        }
+
+        .gallery {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .row:nth-child(even) {
+            background-image: url(./images2/back1.jpg);
+            background-attachment: fixed;
+        }
+
+        .row:nth-child(odd) {
+            background-color: #e8f5e9;
+        }
+
+        .row:hover {
+            background-color: #8366b8;
+        }
+
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            width: 200px;
+            height: 150px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.1);
+        }
+
+        .price-tag {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="hamburger">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <div class="sidebar">
+        <ul>
+            <a href="./HomePage.html"> <li data-target="home"> Home</li></a>
+            <li data-target="products"> <a href="./HomePage.html#products">Products</a></li>
+            <li data-target="contact"> <a href="./HomePage.html#contact-us">Contact Us</a></li>
+            <li data-target="about"> <a href="./HomePage.html#about-us">About Us</a></li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <div class="gallery"></div>
+    </div>
+
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const sidebar = document.querySelector('.sidebar');
+        const content = document.querySelector('.content');
+
+        hamburger.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            content.classList.toggle('sidebar-open');
+        });
+
+        const gallery = document.querySelector('.gallery');
+
+        const imageData = [
+            { images: ['images2/shoe3.jpg', 'images2/shoe2.jpg', 'images2/shoe4.jpg', 'images2/shoe6.jpg'], prices: ['$10', '$15', '$20', '$25'] },
+            { images: ['images2/phone1.jpg', 'images2/phone2.jpg', 'images2/phone3.jpg', 'images2/phone4.jpg'], prices: ['$30', '$35', '$40', '$45'] },
+            { images: ['images2/watch4.jpg', 'images2/watch3.jpg', 'images2/watch2.jpg', 'images2/watch1.jpg'], prices: ['$50', '$55', '$60', '$65'] },
+            { images: ['images2/neck2.png', 'images2/neck3.png', 'images2/neck4.png', 'images2/neck1.png'], prices: ['$70', '$75', '$80', '$85'] },
+            { images: ['images2/lap1.jpg', 'images2/lap2.jpg', 'images2/lap3.jpg', 'images2/lap4.jpg'], prices: ['$90', '$95', '$100', '$105'] },
+            { images: ['images2/Ring7.jpg', 'images2/Ring8.jpg', 'images2/Ring3.png', 'images2/Ring6.jpg'], prices: ['$110', '$115', '$120', '$125'] },
+            { images: ['images2/bag5.png', 'images2/bag2.jpg', 'images2/bag3.png', 'images2/bag4.png'], prices: ['$130', '$135', '$140', '$145'] },
+            { images: ['images2/pod1.jpg', 'images2/pod2.jpg', 'images2/pod3.jpg', 'images2/pod4.jpg'], prices: ['$150', '$155', '$160', '$165'] }
+        ];
+
+        function createRow(rowData) {
+            const row = document.createElement('div');
+            row.classList.add('row');
+
+            rowData.images.forEach((image, index) => {
+                const imageContainer = document.createElement('div');
+                imageContainer.classList.add('image-container');
+
+                const img = document.createElement('img');
+                img.src = image;
+                img.alt = `Image ${index + 1}`;
+
+                const priceTag = document.createElement('div');
+                priceTag.classList.add('price-tag');
+                priceTag.textContent = rowData.prices[index];
+
+                imageContainer.appendChild(img);
+                imageContainer.appendChild(priceTag);
+                row.appendChild(imageContainer);
+            });
+
+            gallery.appendChild(row);
+        }
+
+        imageData.forEach(data => createRow(data));
+    </script>
+</body>
+</html>
